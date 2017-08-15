@@ -1,6 +1,6 @@
-# vue-cli
+# TMS
 
-> A Vue.js project
+> A Template Management System project
 
 ## Build Setup
 
