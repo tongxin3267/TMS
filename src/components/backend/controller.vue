@@ -12,12 +12,11 @@
 		methods: {
 			publish: function(){
 				var _self = this;
+				this.$store.commit('tempRender', this.$store.state.isRender)
 				axios({
 				  	method: 'get',
-				  	url: '/create',
-				  	baseURL: 'http://localhost:8888',
-				  	data: _self.$store.state.tree,
-				  	withCredentials: true
+				  	url: '/bundle',
+				  	baseURL: 'http://localhost:3000'
 				})
 				.then(function(res){
 					console.log(res.data)
