@@ -5,7 +5,7 @@
 	</div>
 </template>
 <script>
-	import page from './test.vue'
+	import page from './page.vue'
 	export default {
 		components: {
 			vPage: page
