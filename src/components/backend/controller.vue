@@ -12,11 +12,21 @@
 		methods: {
 			publish: function(){
 				var _self = this;
+				var tree = _self.$store.state.tree
+				//触发模板渲染
 				this.$store.commit('tempRender', this.$store.state.isRender)
+				if(!tree.length) {
+					console.log('没有配置页面哦！')
+					return
+				}
 				axios({
-				  	method: 'get',
+				  	method: 'post',
 				  	url: '/bundle',
-				  	baseURL: 'http://localhost:3000'
+				  	baseURL: 'http://localhost:3000',
+				  	withCredentials: true,
+				  	data: {
+				  		tree: tree
+				  	}
 				})
 				.then(function(res){
 					console.log(res.data)

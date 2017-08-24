@@ -13,6 +13,6 @@
 	}
 </script>
 
-<style scoped>
-
+<style>
+@import "../../static/css/global.css"
 </style>

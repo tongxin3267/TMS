@@ -213,8 +213,6 @@ var baseWebpackConfig = {
 	]
 }
 
-console.log(baseWebpackConfig.entry)
-
 //style loaders
 var webpackConfig = merge(baseWebpackConfig, {
 	module: {

@@ -10,7 +10,6 @@
 				<v-form :targetForms="targetForms"></v-form>
 			</div>
 		</div>
-		{{store.tree}}
 	</div>
 </template>
 
