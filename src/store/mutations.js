@@ -12,6 +12,10 @@ export default {
 		state.tree.splice(index, 0 , selfItem)
 		state.targetForms = index
 	},
+	//清除数据
+	clearTree: function(state){
+		state.tree = []
+	},
 	//组件渲染
 	tempRender: function(state, data){
 		state.isRender = !data

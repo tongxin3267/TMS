@@ -7,6 +7,9 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var app = express()
 
+//QRcode
+var QRCode = require('qrcode')
+
 // create application/json parser 
 var jsonParser = bodyParser.json()
 
@@ -23,34 +26,38 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 //webpack config
 var webpackConfig = require('./bundle')
 
+//build 
+var buildAllowOrigin = 'http://lp.dev.iovp.com';
+var proAllowOrigin = 'http://localhost:8080';
+
 //设置跨域访问
 app.all('*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.header("Access-Control-Allow-Origin", proAllowOrigin);
     res.header("Access-Control-Allow-Methods","PUT,POST,GET");
     res.header("Access-Control-Allow-Headers","content-type");
     res.header("Access-Control-Max-Age","1728000");
     res.header("Access-Control-Allow-Credentials","true");
     next();
 });
-var num = 0;
+
 //发布
 app.post('/bundle', jsonParser, function(req, res) {
     //receive treeData
-    var treeData = 'export default ' + JSON.stringify({tree:req.body.tree})
+    var treeData = 'export default ' + JSON.stringify({tree:req.body.data})
     //create tree.js
     fs.writeFile(path.resolve(__dirname, '..', 'src/page/tree.js'), treeData, (err) => {
         if (err) throw err;
         //webpack merge config
-        num+=1;
         var bundleConfig = merge(webpackConfig, {
             output: {
-                path: path.resolve(__dirname, '../dist/page'+num),
+                path: path.resolve(__dirname, '../dist/'+req.body.id),
             },
             plugins: [
                 new HtmlWebpackPlugin({
-                    filename: path.resolve(__dirname, '../dist/page'+num+'/index.html'),
+                    filename: path.resolve(__dirname, '../dist/'+req.body.id+'/index.html'),
                     template: 'index.html',
                     inject: true,
+                    title: req.body.id,
                     minify: {
                         removeComments: true,
                         collapseWhitespace: true,
@@ -64,7 +71,12 @@ app.post('/bundle', jsonParser, function(req, res) {
         webpack(bundleConfig, function (err, stats) {
             if (err) throw err
             console.log('打包完成......')
-            res.send('打包完成！！！')
+            var url = 'http://lp.dev.iovp.com/TMS/dist/'+req.body.id
+            QRCode.toDataURL(url, function (err, url) {
+              res.send({
+                url: url
+              })
+            })  
         })
     });
     

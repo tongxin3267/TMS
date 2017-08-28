@@ -3,6 +3,9 @@
 		<div class="logo flex_item">
 			<img class="img" src="../../assets/logo.png" alt="">
 			<div class="txt">{{name}}</div>
+			<ul class="wrap">
+				<li class="item" @click="activeList"><span class="text">活动列表</span></li>
+			</ul>
 		</div>
 		<div class="login_case">
 			<div class="login">退出</div>
@@ -15,6 +18,13 @@
 		data: function(){
 			return {
 				name: '掌阅活动配置后台'
+			}
+		},
+		methods: {
+			activeList: function(){
+				console.log(1)
+				this.$router.push('/');
+				this.$store.commit("clearTree")
 			}
 		}
 	}
@@ -47,5 +57,20 @@
 		text-align: center;
 		cursor: pointer;
 		display: inline-block;
+	}
+	.wrap{
+		margin-left: 30px;
+		display: inline-block;
+	}
+	.item{
+		padding: 0 10px;
+		cursor: pointer;
+	}
+	.text{
+		display: inline-block;
+	    line-height: 1em;
+	    position: relative;
+	    top: 10px;
+	    font-size: 16px;
 	}
 </style>
