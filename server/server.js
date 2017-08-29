@@ -40,6 +40,42 @@ app.all('*', function(req, res, next) {
     next();
 });
 
+//webpack build 
+function build(config, res){
+    //config merge
+    var bundleConfig = merge(webpackConfig, {
+        output: {
+            path: path.resolve(__dirname, '../'+config.dir+'/'+config.subDir),
+        },
+        plugins: [
+            new HtmlWebpackPlugin({
+                filename: path.resolve(__dirname, '../'+config.dir+'/'+config.subDir+'/index.html'),
+                template: 'index.html',
+                inject: true,
+                title: config.title,
+                minify: {
+                    removeComments: true,
+                    collapseWhitespace: true,
+                    removeAttributeQuotes: true
+                },
+                chunksSortMode: 'dependency'
+            })
+        ]
+    })
+    //webpack bundle
+    webpack(bundleConfig, function (err, stats) {
+        if (err) throw err
+        console.log('打包完成......')
+        var url = 'http://lp.dev.iovp.com/TMS/'+config.dir+'/'+config.subDir
+        //create url QRCode
+        QRCode.toDataURL(url, function (err, url) {
+          res.send({
+            url: url
+          })
+        })  
+    })
+}
+
 //发布
 app.post('/bundle', jsonParser, function(req, res) {
     //receive treeData
@@ -47,37 +83,8 @@ app.post('/bundle', jsonParser, function(req, res) {
     //create tree.js
     fs.writeFile(path.resolve(__dirname, '..', 'src/page/tree.js'), treeData, (err) => {
         if (err) throw err;
-        //webpack merge config
-        var bundleConfig = merge(webpackConfig, {
-            output: {
-                path: path.resolve(__dirname, '../dist/'+req.body.id),
-            },
-            plugins: [
-                new HtmlWebpackPlugin({
-                    filename: path.resolve(__dirname, '../dist/'+req.body.id+'/index.html'),
-                    template: 'index.html',
-                    inject: true,
-                    title: req.body.id,
-                    minify: {
-                        removeComments: true,
-                        collapseWhitespace: true,
-                        removeAttributeQuotes: true
-                    },
-                    chunksSortMode: 'dependency'
-                })
-            ]
-        })
-        //webpack bundle
-        webpack(bundleConfig, function (err, stats) {
-            if (err) throw err
-            console.log('打包完成......')
-            var url = 'http://lp.dev.iovp.com/TMS/dist/'+req.body.id
-            QRCode.toDataURL(url, function (err, url) {
-              res.send({
-                url: url
-              })
-            })  
-        })
+        //webpack build
+        build(req.body.config, res)
     });
     
 });

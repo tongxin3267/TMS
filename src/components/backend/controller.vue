@@ -1,14 +1,10 @@
 <template>
 	<div class="controller">
 		<div class="item">
-			<div class="btn">保存</div>
+			<el-button type="primary" :loading="preIsLoading" @click="preview">预览</el-button>
 		</div>
 		<div class="item">
-			<div class="btn">预览</div>
-		</div>
-		<div class="item">
-			<div class="btn" @click="publish">发布</div>
-			<div class="loading" v-show="isLoading"></div>
+			<el-button type="primary" :loading="pubIsLoading" @click="publish">发布</el-button>
 		</div>
 		<div class="QRcode" v-show="isShow">
 			<div class="image">
@@ -24,38 +20,94 @@
 	export default {
 		data: function(){
 			return {
-				isLoading: false,
+				preIsLoading: false,
+				pubIsLoading: false,
 				qrcode: '',
 				isShow: false
 			} 
 		},
 		methods: {
+			//预览
+			preview: function(){
+				var pageId = Date.now();
+				var _self = this;
+				//data
+				var pageData = {
+					data: _self.$store.state.tree,
+					config: {
+						dir: 'preview',
+						subDir: pageId,
+						title: 'this is preview'
+					}
+				};
+				//no page config 
+				if(!pageData.data.length) {
+					_self.tips('没有配置页面哦!')
+					return
+				}
+				//loading
+				_self.preIsLoading = !_self.preIsLoading;
+				//post
+				this.post(pageData, function(res){
+					_self.preIsLoading = !_self.preIsLoading;
+					_self.isShow = !_self.isShow;
+					_self.qrcode = res.data.url;
+				}, function(error){
+					_self.tips('网络请求失败!', 'error')
+				})
+			},
+			//发布
 			publish: function(){
 				var pageId = Date.now();
 				var _self = this;
 				var pageData = {
 					data: _self.$store.state.tree,
-					id: pageId
+					config: {
+						dir: 'dist',
+						subDir: pageId,
+						title: 'this is publish'
+					}
 				};
 				if(!pageData.data.length) {
-					alert('没有配置页面哦！')
+					_self.tips('没有配置页面哦!')
 					return
 				}
-				_self.isLoading = !_self.isLoading;
+				//loading
+				_self.pubIsLoading = !_self.pubIsLoading
+				//post
+				this.post(pageData, function(res){
+					_self.pubIsLoading = !_self.pubIsLoading
+					_self.tips('发布成功!', 'success')
+				}, function(error){
+					_self.tips('网络请求失败!', 'error')
+				})
+			},
+			//ajax
+			post: function(data, sucess, error){
 				axios({
 				  	method: 'post',
 				  	url: '/bundle',
 				  	baseURL: 'http://localhost:3000',
 				  	withCredentials: true,
-				  	data: pageData
+				  	data: data
 				})
 				.then(function(res){
-					_self.isLoading = !_self.isLoading;
-					_self.isShow = !_self.isShow;
-					_self.qrcode = res.data.url;
-					console.log(res.data.url)
+					sucess(res)
+				})
+				.catch(function(error){
+					error(error)
 				})
 			},
+			//提示
+			tips: function(msg, type){
+				var config = {
+					showClose: true,
+		          	message: msg,
+				}
+				type ? config.type = type : '';
+				this.$message(config);
+			},
+			//二维码弹窗关闭
 			close: function(){
 				this.isShow = !this.isShow
 			}
