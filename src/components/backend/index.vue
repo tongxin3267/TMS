@@ -4,7 +4,7 @@
 		<div class="create">
 			<el-button type="primary" @click="goEdit"><span class="add">+</span> 新建</el-button>
 			<div class="search">
-				<el-input placeholder="搜索" icon="search" v-model="input2" :on-icon-click="handleIconClick"></el-input>
+				<el-input placeholder="搜索" icon="search" v-model="input" :on-icon-click="search"></el-input>
 			</div>
 		</div>
 		<div class="form">
@@ -16,9 +16,9 @@
 			    <el-table-column prop="status" label="状态" width="100"></el-table-column>
 			    <el-table-column fixed="right" label="操作" width="140">
 			      <template scope="scope">
-			        <el-button @click="handleClick" type="text" size="small">预览</el-button>
-			        <el-button type="text" size="small">编辑</el-button>
-			        <el-button type="text" size="small">删除</el-button>
+			        <el-button type="text" size="small" @click="review">预览</el-button>
+			        <el-button type="text" size="small" @click="edit">编辑</el-button>
+			        <el-button type="text" size="small" @click="kill">删除</el-button>
 			      </template>
 			    </el-table-column>
 			</el-table>
@@ -38,24 +38,9 @@
 	import vHead from './header'
 	import router from 'vue-router'
   	export default {
-  		components: {
-			vHead: vHead
-		},
-    	methods: {
-    		goEdit: function(){
-    			this.$router.push('Edit');
-  				this.$store.commit("clearTree")
-    		},
-	      	handleClick: function() {
-	        	alert(1)
-	      	},
-	      	handleIconClick(ev) {
-		      console.log(ev);
-		    }
-   		},
-    	data: function() {
+  		data: function() {
       		return {
-      			input2: '',
+      			input: '',
 	        	tableData: [
 	        		{
 		          		date: '2016-05-03',
@@ -87,7 +72,41 @@
 	        		}
 	        	]
       		}
-    	}
+    	},
+  		components: {
+			vHead: vHead
+		},
+    	methods: {
+    		//新增活动
+    		goEdit: function(){
+    			this.$router.push('Edit');
+  				this.$store.commit("clearTree")
+    		},
+    		//搜索活动
+	      	search(ev) {
+		      alert(this.input);
+		    },
+    		//预览活动
+	      	review: function() {
+	        	alert('预览')
+	      	},
+	      	//编辑活动
+	      	edit: function(){
+	      		alert('编辑')
+	      	},
+		    //删除活动
+		    kill: function(){
+		    	this.$confirm('此操作将永久删除该活动页面, 是否继续?', '提示', {
+		          	confirmButtonText: '确定',
+		          	cancelButtonText: '取消',
+		          	type: 'warning'
+		        }).then(function(){
+		          	console.log('删除成功!')
+		        }).catch(function(){
+		          	console.log('已取消删除!')          
+		        });
+		    }
+   		}
   	}
 </script>
 
