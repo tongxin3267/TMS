@@ -66,7 +66,7 @@ function build(config, res){
     webpack(bundleConfig, function (err, stats) {
         if (err) throw err
         console.log('打包完成......')
-        var url = 'http://lp.dev.iovp.com/TMS/'+config.dir+'/'+config.subDir
+        var url = buildAllowOrigin + '/TMS/'+config.dir+'/'+config.subDir
         //create url QRCode
         QRCode.toDataURL(url, function (err, url) {
           res.send({
