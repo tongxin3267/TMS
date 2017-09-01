@@ -1,7 +1,7 @@
 <template>
 	<header class="header flex">
 		<div class="logo flex_item">
-			<img class="img" src="../../assets/logo.png" alt="">
+			<!-- <img class="img" src="../../assets/logo.png" alt=""> -->
 			<div class="txt">{{name}}</div>
 			<ul class="wrap">
 				<li class="item" @click="activeList"><span class="text">活动列表</span></li>
@@ -17,7 +17,7 @@
 	export default {
 		data: function(){
 			return {
-				name: '掌阅活动配置后台'
+				name: '活动配置后台'
 			}
 		},
 		methods: {
