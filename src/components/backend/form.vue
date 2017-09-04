@@ -22,7 +22,7 @@
 				return h(
 					'div',
 					{
-						class: "form"
+						class: "forms"
 					},
 					formArr
 				)

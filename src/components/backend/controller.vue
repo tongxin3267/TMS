@@ -17,6 +17,8 @@
 
 <script>	
 	import axios from 'axios'
+
+	var ip = 'http://172.16.1.66'
 	export default {
 		data: function(){
 			return {
@@ -31,13 +33,14 @@
 			preview: function(){
 				var pageId = Date.now();
 				var _self = this;
+				var activityName = this.$store.state.activityName;
 				//data
 				var pageData = {
 					data: _self.$store.state.tree,
 					config: {
 						dir: 'preview',
 						subDir: pageId,
-						title: 'this is preview'
+						title: activityName
 					}
 				};
 				//no page config 
@@ -58,14 +61,29 @@
 			},
 			//发布
 			publish: function(){
-				var pageId = Date.now();
 				var _self = this;
+				var pageId = new Date();
+				var curId = this.$store.state.curActivityId;
+
+				if(curId){
+					pageId = new Date(curId);
+				}
+				var activityName = this.$store.state.activityName;
+				var activityBrief = this.$store.state.activityBrief;
+				if(activityName == ''){
+					_self.tips('请输入活动名称', 'error');
+					return
+				}
+				if(activityBrief == ''){
+					_self.tips('请输入活动简介', 'error');
+					return
+				}
 				var pageData = {
 					data: _self.$store.state.tree,
 					config: {
 						dir: 'dist',
-						subDir: pageId,
-						title: 'this is publish'
+						subDir: +pageId,
+						title: activityName
 					}
 				};
 				if(!pageData.data.length) {
@@ -81,13 +99,42 @@
 				}, function(error){
 					_self.tips('网络请求失败!', 'error')
 				})
+
+				//mock data
+				if(curId){
+					axios({
+						method: 'put',
+						url: ip + ':9999/pages/'+curId,
+						data: {
+							id: +pageId,
+							name: activityName,
+							brief: activityBrief,
+							date: pageId.getFullYear()+'-'+(pageId.getMonth()+1)+'-'+pageId.getDate(),
+							state: '已上线',
+							data: _self.$store.state.tree
+						}
+					})
+				}else{
+					axios({
+						method: 'post',
+						url: ip + ':9999/pages',
+						data: {
+							id: +pageId,
+							name: activityName,
+							brief: activityBrief,
+							date: pageId.getFullYear()+'-'+(pageId.getMonth()+1)+'-'+pageId.getDate(),
+							state: '已上线',
+							data: _self.$store.state.tree
+						}
+					})
+				}
 			},
-			//ajax
+			//bundle ajax
 			post: function(data, sucess, error){
 				axios({
 				  	method: 'post',
 				  	url: '/bundle',
-				  	baseURL: 'http://localhost:3000',
+				  	baseURL: ip + ':3000',
 				  	withCredentials: true,
 				  	data: data
 				})
@@ -102,7 +149,7 @@
 			tips: function(msg, type){
 				var config = {
 					showClose: true,
-		          	message: msg,
+		          	message: msg
 				}
 				type ? config.type = type : '';
 				this.$message(config);

@@ -22,7 +22,6 @@
 		},
 		methods: {
 			activeList: function(){
-				console.log(1)
 				this.$router.push('/');
 				this.$store.commit("clearTree")
 			}
@@ -65,6 +64,9 @@
 	.item{
 		padding: 0 10px;
 		cursor: pointer;
+	}
+	.item:hover{
+		color: #20a0ff;
 	}
 	.text{
 		display: inline-block;

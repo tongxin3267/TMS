@@ -16,7 +16,13 @@ export default new Vuex.Store({
 		//激活组件渲染
 		isRender: false,
 		//渲染指定组件的表单
-		targetForms: ''
+		targetForms: '',
+		//活动名称
+		activityName: '',
+		//活动简介
+		activityBrief: '',
+		//当前页面ID
+		curActivityId: 0
 	},
 	mutations: mutations,
 	actions: actions

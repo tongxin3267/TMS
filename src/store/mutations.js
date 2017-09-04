@@ -16,6 +16,14 @@ export default {
 	clearTree: function(state){
 		state.tree = []
 	},
+	//更新tree
+	setTree: function(state, data){
+		state.tree = data
+	},
+	//设置当前页面Id
+	setCurActivityId: function(state, data){
+		state.curActivityId = data
+	},
 	//组件渲染
 	tempRender: function(state, data){
 		state.isRender = !data
@@ -32,5 +40,13 @@ export default {
 	//删除组件
 	deleteTemp: function(state, data){
 		state.tree.splice(data, 1)
+	},
+	//活动名称
+	setActivityName: function(state, data){
+		state.activityName = data.name
+	},
+	//活动简介
+	setActivityBrief: function(state, data){
+		state.activityBrief = data.name
 	}
 }
