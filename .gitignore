@@ -1,6 +1,8 @@
 .DS_Store
 node_modules/
 /dist/
+/backstage/
+/mock/
 /server/
 /preview/
 npm-debug.log*
