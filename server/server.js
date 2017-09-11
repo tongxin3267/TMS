@@ -27,8 +27,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin')
 var webpackConfig = require('./bundle')
 
 //build 
-var buildAllowOrigin = 'http://lp.dev.iovp.com';
+var buildAllowOrigin = 'http://ycl.dev.iovp.com';
 var proAllowOrigin = 'http://localhost:8080';
+
+//代理服务器
+var request = require('request');
+var request = request.defaults({
+    jar: true
+});
 
 //设置跨域访问
 app.all('*', function(req, res, next) {
@@ -87,6 +93,13 @@ app.post('/bundle', jsonParser, function(req, res) {
         build(req.body.config, res)
     });
     
+});
+
+app.get('/getBookInfo', (req, res) => {
+    var url = 'http://m.ireader.com/app/app.php?ca=Api_Huawei.GetBooksByCategoryId&pageSize=5&currentPage=1&categoryId=11';
+    request(url, (err, responce, body) => {
+        res.send(body)
+    });
 });
 
 app.listen(3000);

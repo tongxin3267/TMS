@@ -7,17 +7,18 @@
 
 <script>
 	export default {
-	  	props: ['data', 'name', 'title'],
+	  	props: ['data', 'name', 'title', 'getVal'],
 	  	computed: {
 	  		input: {
 	  			get: function(){
 	  				return this.data
 	  			},
 	  			set: function(val){
-	  				this.$store.commit('updateMsg', {
-	  					name: this.name,
-	  					value: val
-	  				})
+	  				this.getVal(val);
+	  				// this.$store.commit('updateMsg', {
+	  				// 	name: this.name,
+	  				// 	value: val
+	  				// })
 	  			}
 	  		}
 	  	}
