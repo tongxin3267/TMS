@@ -16,5 +16,4 @@ function importAll (r) {
 	});
 	return list
 }
-
 export default importAll(desc)

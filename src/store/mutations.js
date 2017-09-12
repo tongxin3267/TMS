@@ -4,6 +4,7 @@ export default {
 		var index = data.target == -1 ? state.tree.length+1 : data.target;
 		state.tree.splice(index, 0, data.tempData);
 		state.targetForms = data.target == -1 ? state.tree.length-1 : data.target
+		console.log(state.targetForms)
 	},
 	//改变已添加组件的顺序
 	changePosition: function(state, position){
@@ -48,5 +49,10 @@ export default {
 	//活动简介
 	setActivityBrief: function(state, data){
 		state.activityBrief = data.name
+	},
+	updateData: function(state, data){
+		var index = state.targetForms;
+		console.log(state.targetForms)
+		state.tree[index].props = data;
 	}
 }
