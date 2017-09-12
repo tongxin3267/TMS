@@ -24,6 +24,7 @@
 			}
 		},
 		methods: {
+			//登录
 			login: function(){
 				var _self = this;
 				var account = this.account;

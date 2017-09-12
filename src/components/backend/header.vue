@@ -22,7 +22,7 @@
 		},
 		methods: {
 			activeList: function(){
-				this.$router.push('/');
+				this.$router.push('Index');
 				this.$store.commit("clearTree")
 			}
 		}
